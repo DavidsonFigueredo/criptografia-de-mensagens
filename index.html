@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Criptografe mensagens</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+
+    h2 {
+      color: #fff;
+      font-size: 60px;
+    }
+
+    .alura-text {
+      font-size: 70px;
+      color: #45a049;
+      position:sticky;
+      top: 50px;
+      left: 0%;
+      transform: translateX(-50%);
+      opacity: 0;
+      animation: fadeInUp 20s ease-out 0.5s forwards;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      color: #fff;
+    }
+
+    input {
+      padding: 8px;
+      margin-bottom: 15px;
+      width: 800px;
+      height: 120px;
+      font-size: 22px;
+      border-radius: 12px;
+    }
+
+    button {
+      cursor: pointer;
+      background-color: #fff;
+      color: black;
+      border: none;
+      border-radius: 4px;
+      padding: 8px 15px;
+      font-size: 14px;
+      margin: 0 5px;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    #result {
+      margin-top: 15px;
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: static;
+      bottom: 80px;
+      width: 100%;
+    }
+
+    .text-container {
+      margin-top: 50px;
+    }
+
+    footer.foo {
+      margin-top: 120px;
+      padding: 50px;
+      text-align: center;
+      background-color: black;
+      color: #45a049;
+      opacity: 1;
+      transition: opacity 0.2s ease-in-out;
+    }
+
+    footer.foo:hover {
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="matrix"></canvas>
+  <h2>Criptografe Mensagens</h2>
+  <div class="alura-text">Alura</div>
+  <div class="text-container">
+    <label for="text">Texto:</label>
+    <input type="text" id="text">
+    <br>
+    <label for="result">Resultado:</label>
+    <input type="text" id="result" readonly>
+  </div>
+  <div class="button-container">
+    <button onclick="encryptText()">Criptografar</button>
+    <button onclick="decryptText()">Descriptografar</button>
+    <button onclick="copyToClipboard()">Copiar</button>
+  </div>
+
+  <script>
+    function encrypt(text) {
+      return text
+        .replace(/e/g, 'enter')
+        .replace(/i/g, 'imes')
+        .replace(/a/g, 'ai')
+        .replace(/o/g, 'ober')
+        .replace(/u/g, 'ufat');
+    }
+
+    function decrypt(text) {
+      return text
+        .replace(/enter/g, 'e')
+        .replace(/imes/g, 'i')
+        .replace(/ai/g, 'a')
+        .replace(/ober/g, 'o')
+        .replace(/ufat/g, 'u');
+    }
+
+    function encryptText() {
+      const inputText = document.getElementById('text').value.toLowerCase();
+      document.getElementById('result').value = encrypt(inputText);
+    }
+
+    function decryptText() {
+      const inputText = document.getElementById('text').value.toLowerCase();
+      document.getElementById('result').value = decrypt(inputText);
+    }
+
+    function copyToClipboard() {
+      const resultInput = document.getElementById('result');
+      resultInput.select();
+      document.execCommand('copy');
+      alert('Texto copiado para a área de transferência!');
+    }
+
+    // Matrix Animation
+    const canvas = document.getElementById('matrix');
+    const ctx = canvas.getContext('2d');
+    const matrixCode = "01";
+    const columns = Math.floor(window.innerWidth / 15);
+    const drops = [];
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    for (let i = 0; i < columns; i++) {
+      drops[i] = 1;
+    }
+
+    function drawMatrix() {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.04)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = '#0F0';
+      ctx.font = '15px Arial';
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = matrixCode[Math.floor(Math.random() * matrixCode.length)];
+        ctx.fillText(text, i * 15, drops[i] * 15);
+
+        if (drops[i] * 15 > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+
+        drops[i]++;
+      }
+    }
+
+    function animateMatrix() {
+      drawMatrix();
+      requestAnimationFrame(animateMatrix);
+    }
+
+    animateMatrix();
+  </script>
+</body>
+<footer class="foo">desenvolvido por Davidson Araújo</footer>
+</html>
